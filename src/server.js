@@ -15,7 +15,9 @@ module.exports = (mqttMtl, name, handler) => {
                 if (!handler.propertyIsEnumerable(service) || typeof handler[service] !== 'function') {
                     throw new Error(`Unknown service "${service}"`);
                 }
-                let result = await handler[service](JSON.parse(message.toString()));
+                let params = message.toString();
+                params = params && JSON.parse();
+                let result = await handler[service](params);
                 send({ result });
             } catch (error) {
                 send({ error: Object.getOwnPropertyNames(error).reduce((acc, v) => ({ [v]: error[v], ...acc }), {}) });
