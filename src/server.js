@@ -12,7 +12,7 @@ module.exports = (mqttMtl, name, handler) => {
             }
 
             try {
-                if (typeof handler[service] !== 'function') {
+                if (!handler.propertyIsEnumerable(service) || typeof handler[service] !== 'function') {
                     throw new Error(`Unknown service "${service}"`);
                 }
                 let result = await handler[service](JSON.parse(message.toString()));
