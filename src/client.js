@@ -39,7 +39,7 @@ module.exports = (mqttMtl, server) => {
         get(target, service, receiver) {
             return (params, timeoutMs = 10000) => {
                 let requestId = lastRequestId++;
-                mqttMtl.publish(`call/request/${server}/${service}/${clientId}/${requestId}`, JSON.stringify(params));
+                mqttMtl.publish(`call/request/${server}/${service}/${clientId}/${requestId}`, params === undefined || params === null? "": JSON.stringify(params));
                 return new Promise((resolve, reject) => {
 
                     let timeout = setTimeout(() => {

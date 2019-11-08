@@ -16,7 +16,7 @@ module.exports = (mqttMtl, name, handler) => {
                     throw new Error(`Unknown service "${service}"`);
                 }
                 let params = message.toString();
-                params = params && JSON.parse();
+                params = params === "" ? undefined : JSON.parse(params);
                 let result = await handler[service](params);
                 send({ result });
             } catch (error) {

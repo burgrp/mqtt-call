@@ -27,7 +27,7 @@ the tool expects MQTT environment variable to point to MQTT broker
 
     let server = client(mqttMtl(`mqtt://${brokerAddress}`), serverName);
 
-    server[serviceName](JSON.parse(params))
+    server[serviceName](params === ""? null: JSON.parse(params))
         .then(result => {
             console.info(JSON.stringify(result, null, 2));
             process.exit(0);
