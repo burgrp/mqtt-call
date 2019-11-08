@@ -1,0 +1,23 @@
+{
+  "name": "@device.farm/mqtt-call",
+  "version": "1.0.0",
+  "description": "Asynchronous service calls over MQTT",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/device-farm/mqtt-call.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/device-farm/mqtt-call/issues"
+  },
+  "homepage": "https://github.com/device-farm/mqtt-call#readme",
+  "dependencies": {
+    "@device.farm/mqtt-mtl": "^1.0.2",
+    "uuid": "^3.3.3"
+  },
+  "bin": {
+    "mqc": "src/cli.js"
+  }
+}
