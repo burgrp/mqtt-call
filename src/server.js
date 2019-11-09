@@ -28,4 +28,17 @@ module.exports = (mqttMtl, name, handler) => {
 
     });
 
+    return {
+        dumpInfo() {
+            console.info(`Services exported by server ${name}:`);
+            let methods = Object.entries(handler);
+            let longestName = methods.reduce((acc, [name]) => Math.max(acc, name.length), 0);
+            for ([name, fn] of methods) {
+                if (typeof fn === "function") {                   
+                    console.info(` • ${name}${" ".repeat(longestName - name.length + 2)}${fn.toString().match(/.*\(\s*(?<params>.*)\s*\)/).groups.params}`);
+                }
+            }
+        }
+    }
+
 }
