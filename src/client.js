@@ -7,30 +7,33 @@ module.exports = (mqttMtl, server) => {
 
     let pending = {}
 
-    mqttMtl.subscribe(`call/response/${clientId}/+`, (topic, message) => {
-        let topicItems = topic.split("/");
-        if (topicItems.length === 4 && topicItems[0] === "call" && topicItems[1] === "response" && topicItems[2] === clientId) {
-            let requestId = topicItems[3];
-            let request = pending[requestId];
+    mqttMtl.subscribe(`call/response/${clientId}`, (topic, message) => {
 
-            if (request) {
-                try {
+        try {
+            message = JSON.parse(message);
+        } catch (e) {
+            // discard invalid messages
+            return;
+        }
 
-                    delete pending[requestId];
-                    clearTimeout(request.timeout);
-                    response = JSON.parse(message.toString());
+        let request = pending[message.request];
 
-                    if (response.error) {
-                        let e = new Error();
-                        Object.assign(e, response.error);
-                        throw e;
-                    } else {
-                        request.resolve(response.result);
-                    }
+        if (request) {
+            try {
 
-                } catch (e) {
-                    request.reject(e);
+                delete pending[message.request];
+                clearTimeout(request.timeout);
+
+                if (message.error) {
+                    let e = new Error();
+                    Object.assign(e, message.error);
+                    throw e;
+                } else {
+                    request.resolve(message.result);
                 }
+
+            } catch (e) {
+                request.reject(e);
             }
         }
     });
@@ -39,7 +42,14 @@ module.exports = (mqttMtl, server) => {
         get(target, service, receiver) {
             return (params, timeoutMs = 10000) => {
                 let requestId = lastRequestId++;
-                mqttMtl.publish(`call/request/${server}/${service}/${clientId}/${requestId}`, params === undefined || params === null? "": JSON.stringify(params));
+                mqttMtl.publish(`call/request/${server}`, JSON.stringify({
+                    client: {
+                        id: clientId,
+                        request: requestId
+                    },
+                    service,
+                    params,
+                }));
                 return new Promise((resolve, reject) => {
 
                     let timeout = setTimeout(() => {

@@ -1,28 +1,31 @@
 module.exports = (mqttMtl, name, handler) => {
 
-    mqttMtl.subscribe(`call/request/${name}/#`, async (topic, message) => {
-        let topicItems = topic.split("/");
-        if (topicItems.length === 6 && topicItems[0] === "call" && topicItems[1] === "request" && topicItems[2] === name) {
-            let service = topicItems[3];
-            let clientId = topicItems[4];
-            let requestId = topicItems[5];
+    mqttMtl.subscribe(`call/request/${name}`, async (topic, message) => {
 
-            function send(data) {
-                mqttMtl.publish(`call/response/${clientId}/${requestId}`, JSON.stringify(data));
-            }
-
-            try {
-                if (!handler.propertyIsEnumerable(service) || typeof handler[service] !== 'function') {
-                    throw new Error(`Unknown service "${service}"`);
-                }
-                let params = message.toString();
-                params = params === "" ? undefined : JSON.parse(params);
-                let result = await handler[service](params);
-                send({ result });
-            } catch (error) {
-                send({ error: Object.getOwnPropertyNames(error).reduce((acc, v) => ({ [v]: error[v], ...acc }), {}) });
-            }
+        try {
+            message = JSON.parse(message);
+        } catch (e) {
+            // discard invalid messages
+            return;
         }
+
+        function send(etc) {
+            mqttMtl.publish(`call/response/${message.client.id}`, JSON.stringify({
+                request: message.client.request,
+                ...etc
+            }));
+        }
+
+        try {
+            if (!handler.propertyIsEnumerable(message.service) || typeof handler[message.service] !== 'function') {
+                throw new Error(`Unknown service "${message.service}"`);
+            }
+            let result = await handler[message.service](message.params);
+            send({ result });
+        } catch (error) {
+            send({ error: Object.getOwnPropertyNames(error).filter(n => n !== "stack").reduce((acc, v) => ({ [v]: error[v], ...acc }), {}) });
+        }
+
     });
 
 }
