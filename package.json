@@ -1,6 +1,6 @@
 {
   "name": "@device.farm/mqtt-call",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Asynchronous service calls over MQTT",
   "main": "src/index.js",
   "repository": {
