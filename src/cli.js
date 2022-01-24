@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const mqttMtl = require("@device.farm/mqtt-mtl");
+const mqttMtl = require("@burgrp/mqtt-mtl");
 const client = require("./index.js").client;
 const fs = require("fs");
 
