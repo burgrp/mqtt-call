@@ -14,8 +14,8 @@
   },
   "homepage": "https://github.com/device-farm/mqtt-call#readme",
   "dependencies": {
-    "@burgrp/mqtt-mtl": "^1.0.2",
-    "uuid": "^3.3.3"
+    "@burgrp/mqtt-mtl": "^1.0.3",
+    "uuid": "^3.4.0"
   },
   "bin": {
     "mqc": "src/cli.js"
