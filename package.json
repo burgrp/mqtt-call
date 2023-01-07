@@ -14,7 +14,7 @@
   },
   "homepage": "https://github.com/device-farm/mqtt-call#readme",
   "dependencies": {
-    "@burgrp/mqtt-mtl": "^1.0.3",
+    "@burgrp/mqtt-mtl": "^1.1.0",
     "uuid": "^3.4.0"
   },
   "bin": {
