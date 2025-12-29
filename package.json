@@ -1,6 +1,6 @@
 {
   "name": "@burgrp/mqtt-call",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Asynchronous service calls over MQTT",
   "main": "src/index.js",
   "repository": {
